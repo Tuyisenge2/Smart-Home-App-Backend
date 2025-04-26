@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AuthException;
+
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\DeviceResource;
 use App\Models\Devices;
@@ -54,7 +56,7 @@ class DevicesController extends BaseController
      */
     public function show(Devices $device)
     {
-        $response= new DeviceResource($device);
+         $response= new DeviceResource($device);
         return $this->sendResponse($response,'Device fetched successfully');
 
     }
