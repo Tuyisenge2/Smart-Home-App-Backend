@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\DevicesController;
+
  
 Route::group([
     'middleware' => 'api',
@@ -13,4 +15,16 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::post('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
+  });
+Route::group([
+    'middleware' => 'api',
+], function ($router) {
+    Route::get('/devices', [DevicesController::class, 'index'])->middleware('auth:api');
+    Route::get('/devices/{device}', [DevicesController::class, 'show'])->middleware('auth:api');
+    Route::post('/devices', [DevicesController::class, 'store'])->middleware('auth:api');
+    Route::put('/devices/{device}', [DevicesController::class, 'update'])->middleware('auth:api');
+    Route::delete('/devices/{device}', [DevicesController::class, 'destroy'])->middleware('auth:api');
 });
+
+
+
