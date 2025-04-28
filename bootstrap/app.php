@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use App\Exceptions\AuthException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,8 +21,16 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
+                    'success'=>false,
                     'message' => $e->getMessage(),
                 ], 401);
             }
+            return false;
         });
+
+  
+        $exceptions->reportable(function (AuthException $e) {
+            info('Authentication Exception: ' . $e->getMessage());
+        });
+  
     })->create();
