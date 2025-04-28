@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Validator;
 use App\Exceptions\AuthException;
 
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -33,22 +33,26 @@ class DevicesController extends BaseController
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+     {
+        $validator= Validator::make($request->all(),[
+            'name'=>'required',
+            'room'=>'required',
+            
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.',$validator->errors());
+        }
+       
         $device_name = $request->input('name');
         $device_room = $request->input('room');
         $device = Devices::create([
             'name' => $device_name,
             'room' => $device_room,
+            'images' => 'imagesurl',
         ]);
-        // return response()->json([
-        //     'data' => new DeviceResource($product)
-        // ], 201);
-
+       
           $response=new DeviceResource($device);
         return $this->sendResponse($response,'Device created successfully');
-
-
-
     }
 
     /**
@@ -78,11 +82,11 @@ class DevicesController extends BaseController
         $device_name = $request->input('name');
         $device_room = $request->input('room');
 
+
         $validated=$request->validate([
             'name'=>'sometimes|string',
             'room'=>'sometimes|string'
         ]);
-
         $device->update($validated);
         $response=new DeviceResource($device);
         return $this->sendResponse($response,'Device updated successfully');
