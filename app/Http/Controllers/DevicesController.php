@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Exceptions\AuthException;
-
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\DeviceResource;
 use App\Models\Devices;
