@@ -7,6 +7,7 @@ use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\RoomController;
 
 
+use App\Http\Controllers\SceneController;
 
 Route::group([
     'middleware' => 'api',
@@ -18,6 +19,7 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::post('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
   });
+  
 Route::group([
     'middleware' => 'api',
 ], function ($router) {
@@ -29,6 +31,11 @@ Route::group([
 
     // Rooms CRUD
     Route::apiResource('rooms', RoomController::class)->middleware('auth:api');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Scene routes
+    Route::apiResource('scenes', SceneController::class);
 });
 
 
