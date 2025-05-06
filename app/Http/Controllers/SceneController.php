@@ -1,19 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Scene;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class SceneController extends Controller
+class SceneController extends BaseController
 {
-    public function __construct()
-    {
-        $this->middleware('auth:sanctum');
-    }
-
+ 
     public function index()
     {
         $scenes = Auth::user()->scenes;

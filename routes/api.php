@@ -33,10 +33,20 @@ Route::group([
     Route::apiResource('rooms', RoomController::class)->middleware('auth:api');
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    // Scene routes
-    Route::apiResource('scenes', SceneController::class);
+Route::group([
+    'middleware' => 'api',
+], function ($router) {
+    Route::get('/scenes', [SceneController::class, 'index'])->middleware('auth:api');
+    Route::get('/scenes/{scene}', [SceneController::class, 'show'])->middleware('auth:api');
+    Route::post('/scenes', [SceneController::class, 'store'])->middleware('auth:api');
+    Route::put('/scenes/{scene}', [SceneController::class, 'update'])->middleware('auth:api');
+    Route::delete('/scenes/{scene}', [SceneController::class, 'destroy'])->middleware('auth:api');
 });
+
+// Route::middleware('auth:sanctum')->group(function () {
+//     // Scene routes
+//     Route::apiResource('scenes', SceneController::class);
+// });
 
 
 
