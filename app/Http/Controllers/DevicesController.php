@@ -11,26 +11,18 @@ use Illuminate\Http\Request;
 
 class DevicesController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         $response=DeviceResource::collection(Devices::all());
         return $this->sendResponse($response,'Device fetched successfully');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+   
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
      {
         $validator= Validator::make($request->all(),[
@@ -54,9 +46,6 @@ class DevicesController extends BaseController
         return $this->sendResponse($response,'Device created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Devices $device)
     {
          $response= new DeviceResource($device);
