@@ -27,7 +27,7 @@ class DevicesController extends BaseController
      {
         $validator= Validator::make($request->all(),[
             'name'=>'required',
-            'room'=>'required',
+            'room_id'=>'required',
             
         ]);
         if($validator->fails()){
@@ -35,11 +35,13 @@ class DevicesController extends BaseController
         }
        
         $device_name = $request->input('name');
-        $device_room = $request->input('room');
+        $device_room = $request->input('room_id');
+        $device_image = $request->input('images');
+
         $device = Devices::create([
             'name' => $device_name,
-            'room' => $device_room,
-            'images' => 'imagesurl',
+            'room_id' => $device_room,
+            'images' => $device_image,
         ]);
        
           $response=new DeviceResource($device);
@@ -68,12 +70,15 @@ class DevicesController extends BaseController
     public function update(Request $request, Devices $device)
     {
         $device_name = $request->input('name');
-        $device_room = $request->input('room');
+        $device_room = $request->input('room_id');
+        $is_active=$request->input('is_active');
 
 
         $validated=$request->validate([
             'name'=>'sometimes|string',
-            'room'=>'sometimes|string'
+            'room_id'=>'sometimes|string',
+            'is_active'=>'sometimes|boolean',
+            'images'=>'sometimes|string',            
         ]);
         $device->update($validated);
         $response=new DeviceResource($device);
