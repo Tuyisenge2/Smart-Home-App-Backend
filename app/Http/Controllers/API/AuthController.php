@@ -107,7 +107,7 @@ try{
             'access_token' => $token,
             'token_type' => 'bearer',
            // 'expires_in' => auth()->factory()->getTTL() * 60,
-            'expires_in' => auth('api')->factory()->getTTL() * 60 * 60 * 4,
+            'expires_in' => auth('api')->factory()->getTTL() * 60 * 60 * 14000000000,
 
         ];
     }
