@@ -30,8 +30,7 @@ class RoomController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'image_path' => 'nullabe|string',
-            'device_count' => 'nullable|integer',
+            'image_path' => 'nullable|string'
         ]);
         return Room::create($validated);
     }
@@ -59,8 +58,7 @@ class RoomController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'image_path' => 'nullable|string',
-            'device_count' => 'nullable|integer',
+            'image_path' => 'nullable|string'
         ]);
         $room->update($validated);
         return $room;

@@ -10,7 +10,13 @@ class Devices extends Model
     use HasFactory;
     
     protected $fillable=[
-        'name','room','images'
+        'name','images','room_id','is_active'
     ];
+public function room()
+{
+    return $this->belongsTo(Room::class);
+}
+
+
 
 }
