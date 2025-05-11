@@ -12,8 +12,10 @@ class SceneController extends BaseController
  
     public function index()
     {
-        $scenes = Auth::user()->scenes;
-        return response()->json(['scenes' => $scenes]);
+        // $scenes = Auth::user()->scenes;
+        // return response()->json(['scenes' => $scenes]);
+         $scenes = Scene::all(); 
+    return response()->json(['scenes' => $scenes]);
     }
 
     public function store(Request $request)
