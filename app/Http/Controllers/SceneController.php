@@ -26,15 +26,17 @@ class SceneController extends BaseController
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'nullable|date_format:H:i|after:start_time',
             'send_notification' => 'boolean',
-            'device_states' => 'required|array',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'devices'=>'required|array',
+            'devices.*'=>'exists:devices,id'
+
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        $scene = Auth::user()->scenes()->create($request->all());
+        $scene = Auth::user()->scenes()->create($request->except('devices'));
+        $scene->devices()->attach($request->devices);   
         return response()->json(['scene' => $scene], 201);
     }
 
@@ -58,7 +60,6 @@ class SceneController extends BaseController
             'start_time' => 'date_format:H:i',
             'end_time' => 'nullable|date_format:H:i|after:start_time',
             'send_notification' => 'boolean',
-            'device_states' => 'array',
             'is_active' => 'boolean'
         ]);
 

@@ -15,14 +15,12 @@ class Scene extends Model
         'start_time',
         'end_time',
         'send_notification',
-        'device_states',
         'is_active',
         'user_id'
     ];
 
     protected $casts = [
         'days_of_week' => 'array',
-        'device_states' => 'array',
         'send_notification' => 'boolean',
         'is_active' => 'boolean',
         'start_time' => 'datetime',
@@ -33,4 +31,8 @@ class Scene extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function devices(){
+        return $this->belongsToMany(Devices::class,);
+    }
+
 } 

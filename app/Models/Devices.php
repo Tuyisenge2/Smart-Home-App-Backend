@@ -19,4 +19,8 @@ public function room()
 
 
 
+    public function scene(){
+        return $this->belongsToMany(scene::class);
+    }
+
 }
