@@ -33,7 +33,7 @@ class SceneController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 400);
         }
         $scene = Auth::user()->scenes()->create($request->except('devices'));
         $scene->devices()->attach($request->devices);   
@@ -67,7 +67,7 @@ class SceneController extends BaseController
     //     ]);
 
     //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
+    //         return response()->json(['errors' => $validator->errors()], 400);
     //     }
 
     //     $scene->update($request->all());
@@ -93,12 +93,12 @@ class SceneController extends BaseController
     ]);
 
     if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
+        return response()->json(['errors' => $validator->errors()], 400);
     }
 
     // Check if is_active is being updated
-    $isActiveChanged = $request->has('is_active') && 
-                      $scene->is_active != $request->is_active;
+    $isActiveChanged = $request->has('is_active');
+         //&&  $scene->is_active != $request->is_active;
 
     $scene->update($request->all());
 
@@ -108,9 +108,9 @@ class SceneController extends BaseController
     }
 
     // Update device associations if provided
-    if ($request->has('devices')) {
-        $scene->devices()->sync($request->devices);
-    }
+    // if ($request->has('devices')) {
+    //     $scene->devices()->sync($request->devices);
+    // }
 
     $scene->load('devices');
     return response()->json(['scene' => $scene]);
