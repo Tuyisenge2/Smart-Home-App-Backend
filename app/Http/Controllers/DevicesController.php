@@ -35,8 +35,8 @@ class DevicesController extends BaseController
         }
        
         $device_name = $request->input('name');
-        $device_room = $request->input('room_id');
         $device_image = $request->input('images');
+         $device_room = $request->input('room_id');
 
         $device = Devices::create([
             'name' => $device_name,
@@ -67,6 +67,25 @@ class DevicesController extends BaseController
      * Update the specified resource in storage.
      */
 
+    // public function update(Request $request, Devices $device)
+    // {
+    //     $device_name = $request->input('name');
+    //     $device_room = $request->input('room_id');
+    //     $is_active=$request->input('is_active');
+    //     $validated=$request->validate([
+    //         'name'=>'sometimes|string',
+    //         'room_id'=>'sometimes|string',
+    //     'is_active' => 'sometimes|boolean' 
+    //     ]);
+    //       if (isset($validated['is_active'])) {
+    //        $validated['is_active'] = $validated['is_active'] ? 1 : 0;
+    //         }
+    //     $device->update($validated);
+    //     $response=new DeviceResource($device);
+    //     return $this->sendResponse($response,'Device updated successfully');
+
+    // }
+
     public function update(Request $request, Devices $device)
     {
         $device_name = $request->input('name');
@@ -84,7 +103,14 @@ class DevicesController extends BaseController
         $response=new DeviceResource($device);
         return $this->sendResponse($response,'Device updated successfully');
 
+    // Convert boolean to integer if needed
+    if (isset($validated['is_active'])) {
+        $validated['is_active'] = $validated['is_active'] ? 1 : 0;
     }
+
+    $device->update($validated);
+    return $this->sendResponse(new DeviceResource($device), 'Device updated successfully');
+}
 
     /**
      * Remove the specified resource from storage.

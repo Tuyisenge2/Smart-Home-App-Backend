@@ -17,9 +17,9 @@ class DeviceResource extends JsonResource
         return [
             'id' => $this->id,
             'Device_name' => $this->name,
-            'Device_room' => $this->room,
-            'images_url'=>$this->images,
-            'is_active'=>$this->is_active
+            'Device_room' => $this->room_id,
+            'isActive' => $this->is_active,
+            'images_url'=>$this->images
         ];
     }
 }

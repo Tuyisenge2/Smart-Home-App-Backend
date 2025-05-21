@@ -12,10 +12,10 @@ class SceneController extends BaseController
  
     public function index()
     {
-        // $scenes = Auth::user()->scenes;
-        // return response()->json(['scenes' => $scenes]);
-         $scenes = Scene::all(); 
-    return response()->json(['scenes' => $scenes]);
+        $scenes = Scene::with('devices')->get();
+        return response()->json(['scenes' => $scenes]);
+
+    //     return Room::all();
     }
 
     public function store(Request $request)
@@ -77,9 +77,9 @@ class SceneController extends BaseController
 
     public function update(Request $request, Scene $scene)
 {
-    if ($scene->user_id !== Auth::id()) {
-        return response()->json(['message' => 'Unauthorized'], 403);
-    }
+    // if ($scene->user_id !== Auth::id()) {
+    //     return response()->json(['message' => 'Unauthorized'], 403);
+    // }
 
     $validator = Validator::make($request->all(), [
         'name' => 'string|max:255',

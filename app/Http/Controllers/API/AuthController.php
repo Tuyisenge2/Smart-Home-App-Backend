@@ -112,12 +112,12 @@ try{
         ];
     }
 
-    protected function respondWithToken($token)
-{
-    return [
-        'access_token' => $token,
-        'token_type' => 'bearer',
-        'expires_in' => auth('api')->factory()->getTTL() * 60, 
-    ];
-}
+//     protected function respondWithToken($token)
+// {
+//     return [
+//         'access_token' => $token,
+//         'token_type' => 'bearer',
+//         'expires_in' => auth('api')->factory()->getTTL() * 60, 
+//     ];
+// }
 }

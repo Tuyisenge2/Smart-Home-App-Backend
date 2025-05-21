@@ -10,7 +10,7 @@ class Devices extends Model
     use HasFactory;
     
     protected $fillable=[
-        'name','images','room_id','is_active'
+        'name','room_id','images','is_active'
     ];
 public function room()
 {
