@@ -15,19 +15,15 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-
-     
-    public function register(Request $request) {
-       
-         
+     public function register(Request $request) {         
 try{
-
         $validator= Validator::make($request->all(),[
             'name'=>'required',
             'email'=>'required|email',
             'password'=>'required',
-            'c_password'=>'required|same:password'
+            'c_password'=>'required|same:password',
+            'fcm_token'=>'sometimes'
+
         ]);
         if($validator->fails()){
             return $this->sendError('Validation Error.',$validator->errors());

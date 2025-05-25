@@ -120,7 +120,6 @@ class SceneController extends BaseController
         if ($scene->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-
         $scene->delete();
         return response()->json(['message' => 'Scene deleted successfully']);
     }

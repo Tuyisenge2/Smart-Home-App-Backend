@@ -8,9 +8,19 @@ use App\Http\Resources\DeviceResource;
 use App\Models\Devices;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\FcmNotificationService;
+use Illuminate\Support\Facades\Log; 
+use App\Models\User; 
 
 class DevicesController extends BaseController
 {
+     protected $fcmService;
+
+       public function __construct(FcmNotificationService $fcmService)
+    {
+        $this->fcmService = $fcmService;
+    }
+
     
     public function index()
     {
@@ -99,19 +109,39 @@ class DevicesController extends BaseController
             'is_active'=>'sometimes|boolean',
             'images'=>'sometimes|string',            
         ]);
-        $device->update($validated);
-        $response=new DeviceResource($device);
-        return $this->sendResponse($response,'Device updated successfully');
-
-    // Convert boolean to integer if needed
     if (isset($validated['is_active'])) {
         $validated['is_active'] = $validated['is_active'] ? 1 : 0;
     }
-
     $device->update($validated);
-    return $this->sendResponse(new DeviceResource($device), 'Device updated successfully');
+            $users = User::whereNotNull('fcm_token')->get();
+              $tokens = $users->pluck('fcm_token')
+                       ->filter()
+                       ->unique()
+                       ->values()
+                       ->toArray();
+ error_log("Found " . count($tokens) . " FCM tokens");
+    if (count($tokens) > 0) {
+        error_log("First token: " . $tokens[0]);
+    }
+ if (isset($validated['is_active'])) {
+        $status = $validated['is_active'] ? 'turned ON' : 'turned OFF';
+        $notificationTitle = "Device Status Changed";
+        $notificationBody = "{$device->name} has been {$status}";
+        
+        $this->fcmService->sendToMultipleDevices(
+            $tokens,
+            $notificationTitle,
+            $notificationBody
+                );
+    } else {
+        $this->fcmService->sendToMultipleDevices(
+            $tokens,
+            "Device Updated",
+            "{$device->name} has been updated"
+        );
+    }
+    return $this->sendResponse( new DeviceResource($device)   , 'Device updated successfully');
 }
-
     /**
      * Remove the specified resource from storage.
      */
