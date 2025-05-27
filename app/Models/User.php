@@ -20,6 +20,9 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'fcm_token',
+        'role_id',
+        'is_active',
     ];
 
     /**
@@ -68,5 +71,9 @@ class User extends Authenticatable implements JWTSubject
     public function scenes()
     {
         return $this->hasMany(Scene::class);
+    }
+      public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }

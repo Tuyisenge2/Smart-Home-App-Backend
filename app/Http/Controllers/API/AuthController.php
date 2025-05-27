@@ -7,6 +7,8 @@ use App\Models\User;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; 
+use App\Models\Role;
+
 class AuthController extends BaseController
 {
  
@@ -15,33 +17,68 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-
-     
-    public function register(Request $request) {
-       
-         
-try{
-
-        $validator= Validator::make($request->all(),[
-            'name'=>'required',
-            'email'=>'required|email',
-            'password'=>'required',
-            'c_password'=>'required|same:password'
+   
+public function register(Request $request) {
+    try {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'c_password' => 'required|same:password',
+            'fcm_token' => 'sometimes'
         ]);
-        if($validator->fails()){
-            return $this->sendError('Validation Error.',$validator->errors());
+
+        if($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-        error_log("zaburi");
+
+        // Find the USER role
+        $userRole = Role::where('name', 'USER')->first();
+        
+        if (!$userRole) {
+            Log::error('USER role not found in database');
+            return $this->sendError('Registration failed. Please contact support.', [], 500);
+        }
+
         $input = $request->all();
-        $input['password']=bcrypt($input['password']);
-         $user=User::create($input);
-        $success['user']=$user;
-        return $this->sendResponse($success,'User register successfully');
-}catch(Exception $e){
-    error_log('message here.uyvyyv7igufviytcuutjcuytctycvu');
-}
+        $input['password'] = bcrypt($input['password']);
+        $input['is_active'] = true; 
+        $input['role_id'] = $userRole->id; 
+        
+        $user = User::create($input);
+        
+        $success['user'] = $user;
+        return $this->sendResponse($success, 'User registered successfully');
+        
+    } catch (\Exception $e) {
+        Log::error('Registration Error: ' . $e->getMessage());
+        return $this->sendError('Registration failed. Please try again.', [], 500);
     }
+}
+   
+//      public function register(Request $request) {         
+// try{
+//         $validator= Validator::make($request->all(),[
+//             'name'=>'required',
+//             'email'=>'required|email',
+//             'password'=>'required',
+//             'c_password'=>'required|same:password',
+//             'fcm_token'=>'sometimes'
+
+//         ]);
+//         if($validator->fails()){
+//             return $this->sendError('Validation Error.',$validator->errors());
+//         }
+//      //   error_log("zaburi");
+//         $input = $request->all();
+//         $input['password']=bcrypt($input['password']);
+//          $user=User::create($input);
+//         $success['user']=$user;
+//         return $this->sendResponse($success,'User register successfully');
+// }catch(Exception $e){
+//     error_log('message here.uyvyyv7igufviytcuutjcuytctycvu');
+// }
+//     }
     /**
      * Get a JWT via given credentials.
      *
@@ -65,8 +102,7 @@ try{
      */
     public function profile()
     {
-        $success = auth()->user();
-   
+        $success = auth()->user();   
         return $this->sendResponse($success, 'User Profile return successfully.');
     }
   
