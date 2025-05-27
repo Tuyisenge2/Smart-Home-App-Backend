@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\RoomController;
-
-
 use App\Http\Controllers\SceneController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 Route::group([
     'middleware' => 'api',
@@ -43,10 +43,25 @@ Route::group([
     Route::delete('/scenes/{scene}', [SceneController::class, 'destroy'])->middleware('auth:api');
 });
 
-// Route::middleware('auth:sanctum')->group(function () {
-//     // Scene routes
-//     Route::apiResource('scenes', SceneController::class);
-// });
+Route::group([
+    'middleware' => ['api','auth:api'], 
+    'prefix' => 'users'
+], function ($router) {
+    Route::get('/', [UserController::class, 'index']);
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::delete('/{id}', [UserController::class, 'destroy']);
+    Route::post('/{id}/deactivate', [UserController::class, 'deactivate']);
+});
 
 
-
+Route::group([
+    'middleware' => ['api', 'auth:api'],
+    'prefix' => 'roles'
+], function ($router) {
+    Route::get('/', [RoleController::class, 'index']);
+    Route::post('/', [RoleController::class, 'store']);
+    Route::get('/{id}', [RoleController::class, 'show']);
+    Route::put('/{id}', [RoleController::class, 'update']);
+    Route::delete('/{id}', [RoleController::class, 'destroy']);
+});
