@@ -8,6 +8,8 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SceneController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\FcmTokenController;
+
 
 Route::group([
     'middleware' => 'api',
@@ -64,4 +66,13 @@ Route::group([
     Route::get('/{id}', [RoleController::class, 'show']);
     Route::put('/{id}', [RoleController::class, 'update']);
     Route::delete('/{id}', [RoleController::class, 'destroy']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'fcm-tokens'
+], function ($router) {
+    Route::get('/', [FcmTokenController::class, 'index']);
+    Route::post('/', [FcmTokenController::class, 'store']);
+    Route::delete('/{token}', [FcmTokenController::class, 'destroy']);
 });

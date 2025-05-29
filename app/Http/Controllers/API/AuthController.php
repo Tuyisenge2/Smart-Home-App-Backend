@@ -37,7 +37,7 @@ public function register(Request $request) {
         
         if (!$userRole) {
             Log::error('USER role not found in database');
-            return $this->sendError('Registration failed. Please contact support.', [], 500);
+            return $this->sendError('Registration failed. you dont have roles created! Please contact support.', [], 500);
         }
 
         $input = $request->all();
@@ -137,13 +137,36 @@ public function register(Request $request) {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    // protected function respondWithToken($token)
+    // {
+    //     return [
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //        // 'expires_in' => auth()->factory()->getTTL() * 60,
+    //         'expires_in' => auth('api')->factory()->getTTL() * 60 * 60 * 14000000000,
+
+    //     ];
+    // }
+
+       protected function respondWithToken($token)
     {
+         $user = auth()->user();
+    $role = $user->role; 
         return [
             'access_token' => $token,
             'token_type' => 'bearer',
            // 'expires_in' => auth()->factory()->getTTL() * 60,
             'expires_in' => auth('api')->factory()->getTTL() * 60 * 60 * 14000000000,
+             'user' => [
+            'id' => $user->id,
+                    'role' => $role ? $role->name : null,
+                     // Include role name
+                'is_active'=> $user->is_active,
+                'email'=>$user->email,
+                'name'=>$user->name
+
+                
+                     ]
 
         ];
     }
