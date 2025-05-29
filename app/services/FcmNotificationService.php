@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Google\Client as GoogleClient;
+use Illuminate\Support\Facades\Log;
 
 class FcmNotificationService
 {
@@ -49,6 +50,7 @@ class FcmNotificationService
             $response = curl_exec($ch);
             $err = curl_error($ch);
             curl_close($ch);
+            Log::error($response);
 
             if ($err) {
                 $errors[] = [
